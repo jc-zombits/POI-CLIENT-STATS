@@ -1,0 +1,45 @@
+.usuarios-container {
+  min-height: 100vh;
+  background-color: #f7fafc;
+  padding-top: 80px;
+}
+
+.usuarios-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.header-section {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-title {
+  color: #1a365d;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.table-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+}
+
+.ant-table-thead > tr > th {
+  background-color: #1a365d !important;
+  color: white !important;
+  font-weight: 500;
+}
+
+.ant-table-tbody > tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background-color: #ebf8ff !important;
+}

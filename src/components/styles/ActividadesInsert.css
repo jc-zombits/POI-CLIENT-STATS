@@ -1,0 +1,88 @@
+.actividades-container {
+  min-height: 100vh;
+  background-color: #f7fafc;
+  padding-top: 80px;
+}
+
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+  color: #1a365d;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.actividades-form {
+  padding: 20px;
+}
+
+.form-input {
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  padding: 10px 15px;
+  width: 100%;
+}
+
+.form-input:hover, 
+.form-input:focus {
+  border-color: #4299e1;
+  box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+}
+
+.number-inputs-row {
+  display: flex;
+  gap: 20px;
+}
+
+.number-input {
+  flex: 1;
+}
+
+.form-number-input {
+  width: 100%;
+}
+
+.form-number-input .ant-input-number-input {
+  padding: 10px 15px;
+}
+
+.form-select .ant-select-selector {
+  border-radius: 4px;
+  border: 1px solid #e2e8f0 !important;
+  padding: 4px 15px;
+  height: auto !important;
+}
+
+.form-select .ant-select-selector:hover {
+  border-color: #4299e1 !important;
+}
+
+.submit-button {
+  background-color: #48bb78;
+  border-color: #48bb78;
+  border-radius: 4px;
+  padding: 10px 25px;
+  height: auto;
+  font-weight: 500;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.submit-button:hover {
+  background-color: #38a169;
+  border-color: #38a169;
+}
+
+.ant-form-item-label > label {
+  color: #2d3748;
+  font-weight: 500;
+}

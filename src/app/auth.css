@@ -1,0 +1,41 @@
+.auth-container {
+  min-height: 100vh;
+  background-color: #f7fafc;
+  padding-top: 80px;
+}
+
+.auth-form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.auth-form-container h2 {
+  color: #1a365d;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.auth-form .ant-form-item-label > label {
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.auth-form .ant-input, 
+.auth-form .ant-input-password,
+.auth-form .ant-select-selector {
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  padding: 10px 15px;
+}
+
+.auth-form .ant-input:hover, 
+.auth-form .ant-input-password:hover,
+.auth-form .ant-select-selector:hover {
+  border-color: #4299e1;
+}

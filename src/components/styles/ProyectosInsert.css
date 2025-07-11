@@ -1,0 +1,231 @@
+.proyectos-container {
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.content-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.form-container {
+  background-color: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+  color: #1a365d;
+  margin-bottom: 24px;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.proyectos-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-input {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.form-textarea {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.form-datepicker {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.date-row {
+  display: flex;
+  gap: 16px;
+}
+
+.date-row .ant-form-item {
+  flex: 1;
+}
+
+.submit-button {
+  background-color: #48bb78;
+  border-color: #48bb78;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.submit-button:hover {
+  background-color: #38a169 !important;
+  border-color: #38a169 !important;
+}
+
+.ant-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ant-table-thead > tr > th {
+  background-color: #1a365d !important;
+  color: white !important;
+}
+
+.ant-pagination-item-active {
+  border-color: #1a365d !important;
+}
+
+.ant-pagination-item-active a {
+  color: #1a365d !important;
+}
+
+.ant-modal-header {
+  background-color: #1a365d;
+}
+
+.ant-modal-title {
+  color: white !important;
+}
+
+.ant-modal-close-x {
+  color: white !important;
+}
+
+.date-row {
+  display: flex;
+  gap: 16px;
+}
+
+.date-row .ant-form-item {
+  flex: 1;
+}
+
+.proyectos-container {
+  padding: 24px;
+}
+
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Contenedores principales */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.main-content-container {
+  padding: 24px;
+  margin-top: 80px; /* Ajusta según la altura de tu navbar */
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.form-and-table-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Estilos para el formulario */
+.form-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e8e8e8;
+  background: white;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.compact-form {
+  padding: 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-item {
+  margin-bottom: 0;
+}
+
+.description-item {
+  margin-bottom: 16px;
+}
+
+.date-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+/* Estilos para la tabla */
+.table-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e8e8e8;
+  background: white;
+  width: 100%;
+  overflow: hidden;
+}
+
+.projects-table {
+  border-radius: 0 0 8px 8px;
+}
+
+/* Estilos para el modal de detalles */
+.project-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+}
+
+.detail-label {
+  font-weight: 500;
+  min-width: 120px;
+  color: #666;
+}
+
+.detail-value {
+  flex: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-content-container {
+    padding: 16px;
+    margin-top: 64px;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .date-fields {
+    grid-template-columns: 1fr;
+  }
+}

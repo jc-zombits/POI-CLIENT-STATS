@@ -1,0 +1,145 @@
+/* Estilos base del contenedor principal */
+.modulos-container {
+  min-height: 100vh;
+  background-color: #f7fafc;
+  padding-top: 80px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Contenedor del contenido principal */
+.modulos-content {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  gap: 24px;
+}
+
+/* Estilos para los contenedores de formulario y tabla */
+.form-container,
+.table-container {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Título del formulario */
+.form-title {
+  color: #1a365d;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Estilos del formulario */
+.modulos-form {
+  padding: 20px;
+}
+
+/* Elementos del formulario */
+.form-input,
+.form-textarea {
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  padding: 10px 15px;
+  width: 100%;
+  transition: all 0.3s;
+}
+
+.form-input:hover, 
+.form-input:focus,
+.form-textarea:hover,
+.form-textarea:focus {
+  border-color: #4299e1;
+  box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+  outline: none;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Etiquetas del formulario */
+.ant-form-item-label > label {
+  color: #2d3748;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* Botón de submit */
+.submit-button {
+  background-color: #48bb78;
+  border-color: #48bb78;
+  border-radius: 4px;
+  padding: 10px 25px;
+  height: auto;
+  font-weight: 500;
+  width: 100%;
+  margin-top: 10px;
+  color: white;
+  transition: all 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #38a169;
+  border-color: #38a169;
+  transform: translateY(-1px);
+}
+
+/* Detalles del módulo en modal */
+.module-details p {
+  margin-bottom: 12px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.module-details strong {
+  color: #2d3748;
+  font-weight: 600;
+}
+
+/* Estilos responsivos */
+@media (min-width: 768px) {
+  .modulos-content {
+    flex-direction: row;
+  }
+  
+  .form-container {
+    flex: 1;
+  }
+  
+  .table-container {
+    flex: 2;
+  }
+}
+
+/* Estilos adicionales para la tabla */
+.ant-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.ant-table-thead > tr > th {
+  background-color: #f8fafc !important;
+  font-weight: 600 !important;
+  color: #2d3748 !important;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background-color: #ebf8ff !important;
+}
+
+.ant-modal-body .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.ant-modal-body .ant-input,
+.ant-modal-body .ant-input-textarea {
+  width: 100%;
+}
