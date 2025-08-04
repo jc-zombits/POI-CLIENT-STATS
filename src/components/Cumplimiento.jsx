@@ -1,7 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Table, Select, Card, Typography, InputNumber, Input, message } from "antd";
+import {
+  Table,
+  Select,
+  Card,
+  Typography,
+  InputNumber,
+  Input,
+  message,
+  Modal
+} from "antd";
 import NavigationBar from "./NavBar";
 import "../components/styles/Cumplimiento.css";
 
@@ -11,139 +20,193 @@ const { Option } = Select;
 const Cumplimiento = () => {
   const [mesSeleccionado, setMesSeleccionado] = useState("Enero");
   const [actividades, setActividades] = useState([]);
+  const [proyectos, setProyectos] = useState([]);
+
+  // Estados para el modal
+  const [modalOpen, setModalOpen] = useState(false);
+  const [detalleActividades, setDetalleActividades] = useState([]);
 
   const mesesDelAnio = [
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
   ];
 
-    // Mapeo para obtener el número del mes
-    const numeroMesMap = {
-      "Enero": 1, "Febrero": 2, "Marzo": 3, "Abril": 4, "Mayo": 5, "Junio": 6,
-      "Julio": 7, "Agosto": 8, "Septiembre": 9, "Octubre": 10, "Noviembre": 11, "Diciembre": 12
-    };
-
-  // Función para calcular el cumplimiento basado en ejecución
-  const calcularCumplimiento = (ejecucion) => {
-    // Aseguramos que `ejecucion` sea un número antes de procesar
-    const porcentaje = parseFloat(String(ejecucion).replace('%', ''));
-    if (isNaN(porcentaje)) return 'Pendiente';
-    return porcentaje >= 50 ? 'Aceptable' : 'Pendiente';
+  const numeroMesMap = {
+    "Enero": 1, "Febrero": 2, "Marzo": 3, "Abril": 4, "Mayo": 5, "Junio": 6,
+    "Julio": 7, "Agosto": 8, "Septiembre": 9, "Octubre": 10, "Noviembre": 11, "Diciembre": 12
   };
 
-  // Obtener datos desde backend
+  /* Carga la lista de proyectos una sola vez */
+  useEffect(() => {
+    fetch("http://localhost:3001/api/proyectos")
+      .then((r) => r.json())
+      .then(setProyectos)
+      .catch(() => message.error("No se pudieron cargar los proyectos."));
+  }, []);
+
+  /* Calcula el cumplimiento */
+  const calcularCumplimiento = (ejecucion) => {
+    const porcentaje = parseFloat(String(ejecucion).replace("%", ""));
+    return isNaN(porcentaje) ? "Pendiente" : porcentaje >= 50 ? "Aceptable" : "Pendiente";
+  };
+
+  /* Carga la tabla principal (sin filtrar por proyecto) */
   useEffect(() => {
     const fetchDatos = async () => {
       try {
-        // Obtener el número del mes para la consulta SQL
         const numeroMes = numeroMesMap[mesSeleccionado];
         if (!numeroMes) {
-          console.warn("Mes seleccionado no válido:", mesSeleccionado);
-          setActividades([]); // Limpiar tabla si el mes no es válido
-          return;
-        }
-
-        // CAMBIO AQUÍ: Envía el número del mes en lugar del nombre
-        const res = await fetch(`http://localhost:3001/api/actividades/cumplimiento?mes=${numeroMes}`);
-        const data = await res.json();
-
-        // ... (resto de tu lógica de frontend para manejar data.map)
-        if (!Array.isArray(data)) {
-          console.error("❌ La respuesta del servidor no es un array:", data);
-          message.error("Formato de datos incorrecto desde el servidor.");
           setActividades([]);
           return;
         }
-        const datosConCumplimiento = data.map((actividad) => ({
-          ...actividad,
-          key: actividad.id_actividad,
-          pesoPorcentual: parseFloat(actividad.pesoPorcentual) || 0,
-          total: parseFloat(actividad.total) || 0,
-          ejecucion: parseFloat(String(actividad.ejecucion).replace('%', '')) || 0,
-          cumplimiento: calcularCumplimiento(actividad.ejecucion)
-        }));
-        setActividades(datosConCumplimiento);
 
+        const res = await fetch(
+          `http://localhost:3001/api/actividades/cumplimiento?mes=${numeroMes}`
+        );
+        const data = await res.json();
+
+        if (!Array.isArray(data)) {
+          message.error("Formato de datos incorrecto.");
+          setActividades([]);
+          return;
+        }
+
+        setActividades(
+          data.map((act) => ({
+            ...act,
+            key: act.id_actividad,
+            pesoPorcentual: parseFloat(act.pesoPorcentual) || 0,
+            total: parseFloat(act.total) || 0,
+            ejecucion: parseFloat(String(act.ejecucion).replace("%", "")) || 0,
+            cumplimiento: calcularCumplimiento(act.ejecucion)
+          }))
+        );
       } catch (err) {
-        console.error("❌ Error al cargar actividades:", err);
-        message.error("No se pudieron cargar las actividades. Revisa la consola del navegador y del servidor.");
+        console.error(err);
+        message.error("Error al cargar actividades.");
       }
     };
 
     fetchDatos();
   }, [mesSeleccionado]);
 
-  const actualizarCampo = (value, record, campo) => {
-    const nuevas = actividades.map(act => {
-      if (act.key === record.key) {
-        // Normalizar el valor de ejecución a un número para el cálculo
-        const nuevaEjecucion = campo === "ejecucion" ? parseFloat(String(value).replace('%', '')) : act.ejecucion;
+  /* Abre el modal con las actividades del proyecto elegido */
+  const handleProyectoChange = async (codigo) => {
+    if (!codigo) return;
+    const numeroMes = numeroMesMap[mesSeleccionado];
+    try {
+      const res = await fetch(
+        `http://localhost:3001/api/actividades/cumplimiento?mes=${numeroMes}&proyecto=${codigo}`
+      );
+      const data = await res.json();
 
-        return {
+      setDetalleActividades(
+        data.map((act) => ({
           ...act,
-          [campo]: value, // Se guarda el valor tal cual fue ingresado en el Input/InputNumber
-          cumplimiento: calcularCumplimiento(nuevaEjecucion)
-        };
-      }
-      return act;
-    });
-    setActividades(nuevas);
+          key: act.id_actividad,
+          pesoPorcentual: parseFloat(act.pesoPorcentual) || 0,
+          total: parseFloat(act.total) || 0,
+          ejecucion: parseFloat(String(act.ejecucion).replace("%", "")) || 0,
+          cumplimiento: calcularCumplimiento(act.ejecucion)
+        }))
+      );
+      setModalOpen(true);
+    } catch (err) {
+      console.error(err);
+      message.error("Error al cargar detalle del proyecto.");
+    }
   };
 
+  /* Columnas reutilizables para ambas tablas */
   const columnas = [
+    { title: "Proyecto", dataIndex: "proyecto", key: "proyecto" },
     { title: "Módulo", dataIndex: "modulo", key: "modulo" },
     { title: "Descripción", dataIndex: "descripcion", key: "descripcion" },
     { title: "Actividad", dataIndex: "actividad", key: "actividad" },
     {
-      title: "Peso Porcentual", dataIndex: "pesoPorcentual", key: "pesoPorcentual", align: "center",
+      title: "Peso Porcentual",
+      dataIndex: "pesoPorcentual",
+      key: "pesoPorcentual",
+      align: "center",
       render: (_, record) => (
         <InputNumber
           min={0}
           max={100}
           value={record.pesoPorcentual}
-          onChange={(value) => actualizarCampo(value, record, "pesoPorcentual")}
-          step={0.01} // Permite valores flotantes
+          onChange={(v) => {
+            const nuevas = actividades.map((a) =>
+              a.key === record.key ? { ...a, pesoPorcentual: v } : a
+            );
+            setActividades(nuevas);
+          }}
+          step={0.01}
         />
       )
     },
     {
-      title: "Estado", dataIndex: "estado", key: "estado",
+      title: "Estado",
+      dataIndex: "estado",
+      key: "estado",
       render: (_, record) => (
         <Input
           value={record.estado}
-          onChange={(e) => actualizarCampo(e.target.value, record, "estado")}
+          onChange={(e) => {
+            const nuevas = actividades.map((a) =>
+              a.key === record.key ? { ...a, estado: e.target.value } : a
+            );
+            setActividades(nuevas);
+          }}
         />
       )
     },
     {
-      title: "Total", dataIndex: "total", key: "total",
+      title: "Total",
+      dataIndex: "total",
+      key: "total",
       render: (_, record) => (
         <InputNumber
           min={0}
           value={record.total}
-          formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-          parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-          onChange={(value) => actualizarCampo(value, record, "total")}
-          step={0.01} // Permite valores flotantes
+          formatter={(val) => `$ ${val}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+          parser={(val) => val.replace(/\$\s?|(,*)/g, "")}
+          onChange={(v) => {
+            const nuevas = actividades.map((a) =>
+              a.key === record.key ? { ...a, total: v } : a
+            );
+            setActividades(nuevas);
+          }}
+          step={0.01}
         />
       )
     },
     {
-      title: "Ejecución", dataIndex: "ejecucion", key: "ejecucion",
+      title: "Ejecución",
+      dataIndex: "ejecucion",
+      key: "ejecucion",
       render: (_, record) => (
         <InputNumber
           min={0}
-          max={100} // Asumiendo que la ejecución es un porcentaje
-          value={parseFloat(String(record.ejecucion).replace('%', ''))} // Asegura que se muestre el valor numérico
-          onChange={(value) => actualizarCampo(value !== null ? `${value}%` : null, record, "ejecucion")} // Guardamos con '%' si así lo manejas en el backend/lógica
-          step={0.01} // Permite valores flotantes
+          max={100}
+          value={record.ejecucion}
+          onChange={(v) => {
+            const ej = parseFloat(v) || 0;
+            const nuevas = actividades.map((a) =>
+              a.key === record.key
+                ? { ...a, ejecucion: ej, cumplimiento: calcularCumplimiento(ej) }
+                : a
+            );
+            setActividades(nuevas);
+          }}
+          step={0.01}
         />
       )
     },
     {
-      title: "Cumplimiento", dataIndex: "cumplimiento", key: "cumplimiento",
+      title: "Cumplimiento",
+      dataIndex: "cumplimiento",
+      key: "cumplimiento",
       render: (cumplimiento) => {
-        let color = cumplimiento === "Aceptable" ? "#68d391" : "#ed8936";
+        const color = cumplimiento === "Aceptable" ? "#68d391" : "#ed8936";
         return <span style={{ color, fontWeight: 500 }}>{cumplimiento}</span>;
       }
     }
@@ -155,16 +218,32 @@ const Cumplimiento = () => {
       <div className="page-content">
         <Card className="main-card">
           <div className="header-section">
-            <Title level={3} className="page-title">Seguimiento de Cumplimiento</Title>
+            <Title level={3} className="page-title">
+              Seguimiento de Cumplimiento
+            </Title>
             <div className="filters">
               <Select
-                className="month-selector"
                 value={mesSeleccionado}
-                onChange={(value) => setMesSeleccionado(value)}
-                style={{ width: 150 }}
+                onChange={setMesSeleccionado}
+                style={{ width: 150, marginRight: 16 }}
               >
                 {mesesDelAnio.map((mes) => (
-                  <Option key={mes} value={mes}>{mes}</Option>
+                  <Option key={mes} value={mes}>
+                    {mes}
+                  </Option>
+                ))}
+              </Select>
+
+              <Select
+                allowClear
+                placeholder="Ver detalle de proyecto"
+                onChange={handleProyectoChange}
+                style={{ width: 220 }}
+              >
+                {proyectos.map((p) => (
+                  <Option key={p.codigo} value={p.codigo}>
+                    {p.nombre}
+                  </Option>
                 ))}
               </Select>
             </div>
@@ -180,6 +259,24 @@ const Cumplimiento = () => {
             pagination={{ pageSize: 10 }}
           />
         </Card>
+
+        {/* Modal con actividades del proyecto seleccionado */}
+        <Modal
+          title="Actividades del proyecto"
+          open={modalOpen}
+          onCancel={() => setModalOpen(false)}
+          footer={null}
+          width={900}
+        >
+          <Table
+            columns={columnas}
+            dataSource={detalleActividades}
+            bordered
+            size="small"
+            scroll={{ x: "max-content" }}
+            pagination={{ pageSize: 5 }}
+          />
+        </Modal>
       </div>
     </div>
   );
